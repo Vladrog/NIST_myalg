@@ -1,0 +1,46 @@
+Test Data File:C:/Users/Влад/programming/Python/NIST/randomness_testsuite-master/TEST.txt
+
+
+Type of Test                                      	P-Value             	Conclusion
+01. Frequency Test (Monobit)                      	5.174922751042349e-306	Non-Random
+02. Frequency Test within a Block                 	8.399184428999839e-137	Non-Random
+03. Run Test                                      	0.0                 	Non-Random
+04. Longest Run of Ones in a Block                	3.2983829520461876e-40	Non-Random
+05. Binary Matrix Rank Test                       	0.00212483967641462 	Non-Random
+06. Discrete Fourier Transform (Spectral) Test    	0.017060636052561872	Random
+07. Non-Overlapping Template Matching Test        	1.1775708656193952e-26	Non-Random
+08. Overlapping Template Matching Test            	1.3244158272316218e-18	Non-Random
+09. Maurer's Universal Statistical test           	-1.0                	Non-Random
+10. Linear Complexity Test                        	0.137684564491413   	Random
+11. Serial test:
+													2.6491006268379854e-15	Non-Random
+													0.6833562610004967  	Random
+12. Approximate Entropy Test                      	3.3792004919573457e-189	Non-Random
+13. Cummulative Sums (Forward) Test               	9.621321836560556e-307	Non-Random
+14. Cummulative Sums (Reverse) Test               	1.2764967435174549e-306	Non-Random
+15. Random Excursions Test:
+				State     	Chi Squared         	P-Value             	Conclusion
+				-4        	5.0521541950113384  	0.40954846148625246 	Random
+				-3        	4.468               	0.4841763116207015  	Random
+				-2        	4.882030178326474   	0.43044652728385924 	Random
+				-1        	2.9444444444444446  	0.7085506685784352  	Random
+				+1        	1.2777777777777777  	0.9372016313330307  	Random
+				+2        	7.104252400548697   	0.2130016767429332  	Random
+				+3        	7.8933333333333335  	0.1622130416449688  	Random
+				+4        	3.1092600305428295  	0.6831455733026637  	Random
+16. Random Excursions Variant Test:
+				State     	COUNTS              	P-Value             	Conclusion
+				-5.0      	2                   	0.18166496074010363 	Random
+				-4.0      	5                   	0.16732516312869072 	Random
+				-3.0      	8                   	0.140016503197169   	Random
+				-2.0      	13                  	0.11759421612289259 	Random
+				-1.0      	23                  	0.12550647143746915 	Random
+				+1.0      	39                  	0.7236736098317631  	Random
+				+2.0      	24                  	0.4142161782425253  	Random
+				+3.0      	8                   	0.140016503197169   	Random
+				+4.0      	9                   	0.22910188406505883 	Random
+				+5.0      	14                  	0.3874551722971866  	Random
+				+6.0      	11                  	0.3743598693107886  	Random
+				+7.0      	5                   	0.3109327895848325  	Random
+				+8.0      	3                   	0.31530245208174557 	Random
+				+9.0      	2                   	0.3311374592689704  	Random
