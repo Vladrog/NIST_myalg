@@ -59,11 +59,9 @@ def get_result_string(result):
 	else:
 		return 'Non-Random'
 
-def attractor(x, y, sym):
-	P = [mpf('3'), mpf('3'), mpf('4'), mpf('4'), sym]
-	x = (sin(P[0]*y) + P[2]*cos(P[0]* x)) * P[4]
-	y = (sin(P[1]*x) + P[3]*cos(P[1]* y)) * (1 - P[4])
-
+def attractor(x, y, p, sym):
+	x = sym*(cos(1-p[0]*pow(x, 2))+pow(exp(1),p[1]*pow(y, 2)))
+	y = ((1-sym)*sin(pow(x, 2)))
 	return x, y
 
 def threshhold(string):
@@ -78,13 +76,13 @@ def threshhold(string):
 
 	return biString
 
-def draw_map(steps, start, sym):
+def draw_map(steps, startPoint, p, sym):
 	n = steps
 	x_arr, y_arr = [], []
 	arr = ""
-	x_arr.append(start[0]), y_arr.append(start[1])
+	x_arr.append(startPoint[0]), y_arr.append(startPoint[1])
 	for i in range(steps):
-		x, y = attractor(x_arr[-1], y_arr[-1], sym)
+		x, y = attractor(x_arr[-1], y_arr[-1], p, sym)
 		if x<0:
 			x = -x
 		if y<0:
@@ -107,9 +105,11 @@ def draw_map(steps, start, sym):
 
 mp.prec = 53
 mp.dps = 15
+startPoint = [mpf('0.3'), mpf('0.3')]
+p = [mpf('1.4'), mpf('0.3')]
 symStep = mpf('0.01')
 step = 0
-symInterval = [mpf('-1'), mpf('0')]
+symInterval = [mpf('0'), mpf('1')]
 sym = symInterval[0]
 results = {'sym': []}
 for testType in _test_type:
@@ -118,7 +118,7 @@ for testType in _test_type:
 while sym <= symInterval[1]:
 
 	steps = 10000
-	draw_map(steps, [mpf('-1'), mpf('-1')], sym)
+	draw_map(steps, startPoint, p, sym)
 
 	_test_result = []
 	_test_string = []
