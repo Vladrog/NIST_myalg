@@ -1,6 +1,7 @@
 import numpy as np
 from mpmath import *
 import matplotlib.pyplot as plt
+from math import copysign, fabs, floor, isfinite, modf
 plt.style.use('dark_background')
 from ApproximateEntropy import ApproximateEntropy as aet
 from Complexity import ComplexityTest as ct
@@ -77,6 +78,16 @@ def threshhold(string):
 
 	return biString
 
+def float_to_bin_fixed(f):
+    if not isfinite(f):
+        return repr(f)  # inf nan
+
+    sign = '-' * (copysign(1.0, f) < 0)
+    frac, fint = modf(fabs(f))  # split on fractional, integer parts
+    n, d = frac.as_integer_ratio()  # frac = numerator / denominator
+    assert d & (d - 1) == 0  # power of two
+    return f'{sign}{floor(fint):b}.{n:0{d.bit_length()-1}b}'
+
 def draw_map(steps, startPoint, k, symbol):
 	n = steps
 	x_arr, y_arr = [], []
@@ -88,11 +99,14 @@ def draw_map(steps, startPoint, k, symbol):
 			x = -x
 		if y<0:
 			y = -y
-		strx = str(x%1).replace("0.","")
-		strx = str(y%1).replace("0.","")
-		if strx.find(".") == -1 and len(strx)>symbol:
-			arr = arr + threshhold(strx[symbol])     
+		#strx = str(x%1).replace("0.","")
+		#stry = str(y%1).replace("0.","")
+		#if strx.find(".") == -1 and len(strx)>symbol:
+		#	arr = arr + threshhold(strx[symbol])     
 
+		strx = float_to_bin_fixed(x)
+		stry = float_to_bin_fixed(y)
+		arr = arr + strx[-symbol]
 		x_arr.append(x)
 		y_arr.append(y)  
 
@@ -110,7 +124,7 @@ startPoint = [mpf('1.3'), mpf('0.1')]
 k = mpf('1')
 symStep = 1
 step = 0
-symInterval = [10, 14]
+symInterval = [1, 10]
 sym = symInterval[0]
 results = {'sym': []}
 for testType in _test_type:
