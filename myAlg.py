@@ -1,5 +1,4 @@
 import numpy as np
-from mpmath import *
 import matplotlib.pyplot as plt
 from math import copysign, fabs, floor, isfinite, modf
 plt.style.use('dark_background')
@@ -60,23 +59,11 @@ def get_result_string(result):
 	else:
 		return 'Non-Random'
 
-def attractor(x, y, k):
+def attractor(x, y, k, sym):
 	t = x
-	x = -y + mpf('0.13')*(abs(x)+k)
-	y = t - (mpf('1')-mpf('0.13'))*(abs(x)+k)
+	x = -y + sym * (abs(x)+k)
+	y = t - (1 - sym)*(abs(x)+k)
 	return x, y
-
-def threshhold(string):
-
-	biString = ""
-
-	for symb in string:
-		if int(symb)%2 == 0:
-			biString = biString + '0'
-		else:
-			biString = biString + '1'
-
-	return biString
 
 def float_to_bin_fixed(f):
     if not isfinite(f):
@@ -88,25 +75,21 @@ def float_to_bin_fixed(f):
     assert d & (d - 1) == 0  # power of two
     return f'{sign}{floor(fint):b}.{n:0{d.bit_length()-1}b}'
 
-def draw_map(steps, startPoint, k, symbol):
+def draw_map(steps, startPoint, k, sym): # формирование выборки для тестов 
 	n = steps
 	x_arr, y_arr = [], []
 	arr = ""
 	x_arr.append(startPoint[0]), y_arr.append(startPoint[1])
 	for i in range(steps):
-		x, y = attractor(x_arr[-1], y_arr[-1], k)
+		x, y = attractor(x_arr[-1], y_arr[-1], k, sym) # получаем значения генератора
 		if x<0:
 			x = -x
 		if y<0:
-			y = -y
-		#strx = str(x%1).replace("0.","")
-		#stry = str(y%1).replace("0.","")
-		#if strx.find(".") == -1 and len(strx)>symbol:
-		#	arr = arr + threshhold(strx[symbol])     
+			y = -y   
 
-		strx = float_to_bin_fixed(x)
+		strx = float_to_bin_fixed(x) # перевод в двоичный вид
 		stry = float_to_bin_fixed(y)
-		arr = arr + strx[-symbol]
+		arr = arr + strx[-5] # берем 5-ый символ с конца в бинарной строке
 		x_arr.append(x)
 		y_arr.append(y)  
 
@@ -118,23 +101,23 @@ def draw_map(steps, startPoint, k, symbol):
 
 	return x_arr, y_arr
 
-mp.prec = 53
-mp.dps = 15
-startPoint = [mpf('1.3'), mpf('0.1')]
-k = mpf('1')
-symStep = 1
+startPoint = [1.3, 0.1] # начальная точка
+k = 1
+symStep = 0.01 # шаг симметрии
 step = 0
-symInterval = [1, 10]
+symInterval = [0.01, 1] # интервал симметрии
 sym = symInterval[0]
 results = {'sym': []}
 for testType in _test_type:
 	results[testType] = []
 	results[testType + '_testResult'] = []
-while sym <= symInterval[1]:
 
-	steps = 10000
-	draw_map(steps, startPoint, k, sym)
+while sym <= symInterval[1]: # формирование выборок по sym коэф. и прохождение тестов
 
+	steps = 10000 # количество итераций генератора
+	draw_map(steps, startPoint, k, sym) # формирование выборки с текущим коэф. симметрии
+
+	# Прохождение тестов
 	_test_result = []
 	_test_string = []
 	input = []
@@ -144,7 +127,7 @@ while sym <= symInterval[1]:
 		temp.append(data.strip().rstrip())
 	test_data = ''.join(temp)
 	input.append(test_data[:1000000])
-	for testData in input:
+	for testData in input: 
 		count = 0
 		res = [(), (), (), (), (), (), (), (), (), (), (), (), (), (), ()]
 		for testNumber in range(15):
@@ -169,21 +152,27 @@ while sym <= symInterval[1]:
 	step = step + 1
 	sym = sym + symStep
 
-for testNumber in range(15):
+for testNumber in range(15): # рисование графиков
 	if testNumber == 8:
 		continue
 	accepted = []
 	refused = []
 	acceptedSym = []
 	refusedSym = []
+	resultsNew = []
 	for i in range(step):
 		if results[_test_type[testNumber]+'_testResult'][i] == True:
-			accepted.append(results[_test_type[testNumber]][i])
+			#accepted.append(results[_test_type[testNumber]][i])
+			accepted.append(1)
+			resultsNew.append(1)
 			acceptedSym.append(results['sym'][i])
 		else:
-			refused.append(results[_test_type[testNumber]][i])
+			#refused.append(results[_test_type[testNumber]][i])
+			refused.append(0)
+			resultsNew.append(0)
 			refusedSym.append(results['sym'][i])
-	testPlotResult, testPlotAccepted, testPlotRefused = plt.plot(results['sym'], results[_test_type[testNumber]], 'b', 
+	testPlotResult, testPlotAccepted, testPlotRefused = plt.plot(results['sym'], resultsNew, #results[_test_type[testNumber]], 
+		'b', 
 	  acceptedSym, accepted, 'g^',
 	  refusedSym, refused, 'ro')
 	plt.title(_test_type[testNumber])
